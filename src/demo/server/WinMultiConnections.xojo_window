@@ -802,29 +802,29 @@ End
 		End Sub
 	#tag EndEvent
 	#tag Event
-		Sub MessageReceived(sender As SecureTCPSocket, message As SecureTCPMessage)
+		Sub MessageReceived(sender As SecureTCPSocket, messageData As MemoryBlock, messageType As Integer)
 		  #Pragma Unused sender
 		  
 		  Output("Message received")
 		  Output("================")
 		  
-		  Select Case message.Type
+		  Select Case messageType
 		  Case 0 ' Text.
-		    Output(DefineEncoding(message.Body, Encodings.UTF8))
+		    Output(DefineEncoding(messageData, Encodings.UTF8))
 		  Case 1 ' Text file.
 		    Dim f As FolderItem = SpecialFolder.Desktop.Child("message-from-client.txt")
 		    Dim bs As BinaryStream = BinaryStream.Create(f, True)
-		    bs.Write(message.Body)
+		    bs.Write(messageData)
 		    bs.Close
 		    Output("Data written to `/Desktop/message.txt")
 		  Case 2 ' JPEG.
 		    Dim f As FolderItem = SpecialFolder.Desktop.Child("message-from-client.jpg")
 		    Dim bs As BinaryStream = BinaryStream.Create(f, True)
-		    bs.Write(message.Body)
+		    bs.Write(messageData)
 		    bs.Close
 		    Output("Data written to `/Desktop/message.jpg")
 		  Else
-		    Output("Unknown message type: " + Str(message.Type))
+		    Output("Unknown message type: " + Str(messageType))
 		  End Select
 		  
 		End Sub

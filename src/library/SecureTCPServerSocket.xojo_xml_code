@@ -16,9 +16,12 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function AddSocket() As TCPSocket</SourceLine>
+   <SourceLine>// Create a new socket with a unique ID.</SourceLine>
+   <SourceLine>// Mark this socket as a "server" socket (i.e. responsible for handling the handshaking).</SourceLine>
    <SourceLine>Dim sock As New SecureTCPSocket(NextID, True)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>// Add handlers </SourceLine>
+   <SourceLine>// Dispatch events raised by the socket to our delegates. These will subsequently </SourceLine>
+   <SourceLine>// raise this server socket's custom events.</SourceLine>
    <SourceLine>AddHandler sock.Connected, AddressOf Self.NewConnectionDelegate</SourceLine>
    <SourceLine>AddHandler sock.Disconnected, AddressOf Self.SocketDisconnectedDelegate</SourceLine>
    <SourceLine>AddHandler sock.Error, AddressOf Self.SocketErrorDelegate</SourceLine>
@@ -55,15 +58,15 @@
   <PartID>151001087</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub MessageReceivedDelegate(sender As SecureTCPSocket, message As SecureTCPMessage)</SourceLine>
-   <SourceLine>MessageReceived(sender, message)</SourceLine>
+   <SourceLine>Sub MessageReceivedDelegate(sender As SecureTCPSocket, messageData As MemoryBlock, messageType As Integer)</SourceLine>
+   <SourceLine>MessageReceived(sender, messageData, messageType)</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>sender As SecureTCPSocket, message As SecureTCPMessage</ItemParams>
+  <ItemParams>sender As SecureTCPSocket, messageData As MemoryBlock, messageType As Integer</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>
@@ -177,7 +180,7 @@
   <TextEncoding>134217984</TextEncoding>
   <ItemFlags>0</ItemFlags>
   <SystemFlags>0</SystemFlags>
-  <ItemParams>sender As SecureTCPSocket, message As SecureTCPMessage</ItemParams>
+  <ItemParams>sender As SecureTCPSocket, messageData As MemoryBlock, messageType As Integer</ItemParams>
   <ItemResult></ItemResult>
  </Hook>
  <Hook>

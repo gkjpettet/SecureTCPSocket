@@ -7,7 +7,6 @@ Window=WinSingleConnection;WinSingleConnection.xojo_window;&hFFFFFFFFBA3A1FCF;&h
 Window=WinMultiConnections;WinMultiConnections.xojo_window;&h0000000039AB27FF;&h0000000000000000;false
 Module=RegisterPlugins;../../../../register-xojo-plugins/src/RegisterPlugins.xojo_xml_code;&h0000000072919FFF;&h0000000000000000;false
 BuildSteps=Build Automation;Build Automation.xojo_code;&h0000000025838FFF;&h0000000000000000;false
-Class=SecureTCPMessage;../../library/SecureTCPMessage.xojo_xml_code;&h00000000500517FF;&h0000000000000000;false
 Class=SecureTCPServerSocket;../../library/SecureTCPServerSocket.xojo_xml_code;&h000000004C9697FF;&h0000000000000000;false
 Class=SecureTCPSocket;../../library/SecureTCPSocket.xojo_xml_code;&h00000000463377FF;&h0000000000000000;false
 DefaultWindow=WinMultiConnections

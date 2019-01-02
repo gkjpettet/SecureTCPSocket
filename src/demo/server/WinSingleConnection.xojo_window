@@ -270,6 +270,7 @@ Begin Window WinSingleConnection
       ID              =   -1
       Index           =   -2147483648
       LockedInPosition=   False
+      mState          =   ""
       Port            =   0
       Scope           =   0
       TabPanelIndex   =   0
@@ -623,18 +624,18 @@ End
 		End Sub
 	#tag EndEvent
 	#tag Event
-		Sub MessageReceived(message As SecureTCPMessage)
-		  Output("Message received")
-		  Output("================")
-		  
-		  Output(DefineEncoding(message.Body, Encodings.UTF8))
-		  
-		  
+		Sub InvalidDataReceived()
+		  Output("Invalid data received from IP: " + Me.RemoteAddress)
 		End Sub
 	#tag EndEvent
 	#tag Event
-		Sub InvalidDataReceived()
-		  Output("Invalid data received from IP: " + Me.RemoteAddress)
+		Sub MessageReceived(data As MemoryBlock, type As Integer)
+		  Output("Message received")
+		  Output("================")
+		  
+		  Output(DefineEncoding(data, Encodings.UTF8))
+		  
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents

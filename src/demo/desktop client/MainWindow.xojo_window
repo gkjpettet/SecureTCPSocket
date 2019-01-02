@@ -270,6 +270,7 @@ Begin Window MainWindow
       ID              =   -1
       Index           =   -2147483648
       LockedInPosition=   False
+      mState          =   ""
       Port            =   0
       Scope           =   0
       TabPanelIndex   =   0
@@ -690,27 +691,27 @@ End
 		End Sub
 	#tag EndEvent
 	#tag Event
-		Sub MessageReceived(message As SecureTCPMessage)
+		Sub MessageReceived(data As MemoryBlock, type As Integer)
 		  Output("Message received")
 		  Output("================")
 		  
-		  Select Case message.Type
+		  Select Case type
 		  Case 0 ' Text.
-		    Output(DefineEncoding(message.Body, Encodings.UTF8))
+		    Output(DefineEncoding(data, Encodings.UTF8))
 		  Case 1 ' Text file.
 		    Dim f As FolderItem = SpecialFolder.Desktop.Child("message-from-server.txt")
 		    Dim bs As BinaryStream = BinaryStream.Create(f, True)
-		    bs.Write(message.Body)
+		    bs.Write(data)
 		    bs.Close
 		    Output("Data written to `/Desktop/message.txt")
 		  Case 2 ' JPEG.
 		    Dim f As FolderItem = SpecialFolder.Desktop.Child("message-from-server.jpg")
 		    Dim bs As BinaryStream = BinaryStream.Create(f, True)
-		    bs.Write(message.Body)
+		    bs.Write(data)
 		    bs.Close
 		    Output("Data written to `/Desktop/message.jpg")
 		  Else
-		    Output("Unknown message type: " + Str(message.Type))
+		    Output("Unknown message type: " + Str(type))
 		  End Select
 		  
 		End Sub

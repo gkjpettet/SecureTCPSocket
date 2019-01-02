@@ -342,7 +342,7 @@
    <SourceLine></SourceLine>
    <SourceLine>// Fire the message received event for any messages received.</SourceLine>
    <SourceLine>For i As Integer = 0 To mMessages.Ubound</SourceLine>
-   <SourceLine>MessageReceived(mMessages(i))</SourceLine>
+   <SourceLine>MessageReceived(mMessages(i).Left, mMessages(i).Right)</SourceLine>
    <SourceLine>Next i</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>// Clear out the (now handled) messages.</SourceLine>
@@ -545,10 +545,10 @@
    <SourceLine></SourceLine>
    <SourceLine>// Decode and decrypt the body.</SourceLine>
    <SourceLine>Dim decodedBody As String = DecodeBase64(base64EncodedBody)</SourceLine>
-   <SourceLine>Dim decryptedBody As String = Decrypt(decodedBody)</SourceLine>
+   <SourceLine>Dim decryptedBody As MemoryBlock = Decrypt(decodedBody)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>// Construct a simple message.</SourceLine>
-   <SourceLine>mMessages.Append(New SecureTCPMessage(decryptedBody, type))</SourceLine>
+   <SourceLine>mMessages.Append(New Pair(decryptedBody, type))</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>// Remove this message from the data buffer.</SourceLine>
    <SourceLine>mDataBuffer = mDataBuffer.RightB(mDataBuffer.Size - (9 + bodyLength))</SourceLine>
@@ -665,7 +665,7 @@
   <TextEncoding>134217984</TextEncoding>
   <ItemFlags>0</ItemFlags>
   <SystemFlags>0</SystemFlags>
-  <ItemParams>message As SecureTCPMessage</ItemParams>
+  <ItemParams>data As MemoryBlock, type As Integer</ItemParams>
   <ItemResult></ItemResult>
  </Hook>
  <Hook>
@@ -788,11 +788,11 @@
   <PartID>1422225407</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mMessages() As SecureTCPMessage</SourceLine>
+   <SourceLine>mMessages() As Pair</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mMessages() As SecureTCPMessage</ItemDeclaration>
+  <ItemDeclaration>mMessages() As Pair</ItemDeclaration>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
