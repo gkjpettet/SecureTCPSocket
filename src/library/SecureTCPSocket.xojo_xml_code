@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2018r4" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="1093791743">
+ <ObjName>SecureTCPSocket</ObjName>
+ <ObjContainerID>0</ObjContainerID>
+ <IsClass>1</IsClass>
+ <Superclass>TCPSocket</Superclass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility>( TargetConsole and ( Target32Bit or Target64Bit ) ) or ( TargetWeb and ( Target32Bit or Target64Bit ) ) or ( TargetDesktop and ( Target32Bit or Target64Bit ) )</Compatibility>
+ <HookInstance>
+  <ItemName>Connected</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>418592767</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Connected()</SourceLine>
+   <SourceLine>// New connection.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Start the handshake. This is initiated by the client.</SourceLine>
+   <SourceLine>If Not mIsServer Then BeginHandshake</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <HookInstance>
+  <ItemName>DataAvailable</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1464766463</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub DataAvailable()</SourceLine>
+   <SourceLine>Select Case mState</SourceLine>
+   <SourceLine>Case State.WaitingForHandshakePacket</SourceLine>
+   <SourceLine>HandleHandshakePacket(Self.ReadAll)</SourceLine>
+   <SourceLine>Case State.WaitingForServerKeyPacket</SourceLine>
+   <SourceLine>HandleServerKeyPacket(Self.ReadAll)</SourceLine>
+   <SourceLine>Case State.ConnectedSecurely</SourceLine>
+   <SourceLine>HandleSecurePacket(Self.ReadAll)</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>// We have received data from the connected socket that we aren't expecting. Ignore it.</SourceLine>
+   <SourceLine>End Select</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <HookInstance>
+  <ItemName>Error</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>216061951</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Error()</SourceLine>
+   <SourceLine>If Self.LastErrorCode = SocketCore.LostConnection Then</SourceLine>
+   <SourceLine>Reset</SourceLine>
+   <SourceLine>Disconnected</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>Error(Self.LastErrorCode)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <HookInstance>
+  <ItemName>SendComplete</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1444573183</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub SendComplete(userAborted as Boolean)</SourceLine>
+   <SourceLine>#Pragma Unused userAborted</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' Overridden.</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <HookInstance>
+  <ItemName>SendProgress</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>974010367</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function SendProgress(bytesSent as Integer, bytesLeft as Integer) As Boolean</SourceLine>
+   <SourceLine>#Pragma Unused bytesSent</SourceLine>
+   <SourceLine>#Pragma Unused bytesLeft</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>' Overridden.</SourceLine>
+   <SourceLine>Return False</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <Method>
+  <ItemName>Connect</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>604692479</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Connect()</SourceLine>
+   <SourceLine>// Begin the connection process. This method may raise a NetKitError.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Generate new public and private keys.</SourceLine>
+   <SourceLine>GenerateRSAKeys</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Calling the overridden superclass method.</SourceLine>
+   <SourceLine>Super.Connect</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1523468287</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(id As Integer, isServer As Boolean = False)</SourceLine>
+   <SourceLine>// Calling the overridden superclass constructor.</SourceLine>
+   <SourceLine>Super.Constructor</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Self.ID = id</SourceLine>
+   <SourceLine>mIsServer = isServer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Reset</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>id As Integer, isServer As Boolean = False</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>SendMessage</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>527960063</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub SendMessage(data As MemoryBlock, type As Integer)</SourceLine>
+   <SourceLine>// Send the passed data securely to the socket we're connected to.</SourceLine>
+   <SourceLine>// Packet format:</SourceLine>
+   <SourceLine>// {start token} {message type} {body length} {base 64 encoded, encrypted body}</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Check that we're securely connected.</SourceLine>
+   <SourceLine>If mState &lt;&gt; State.ConnectedSecurely Then</SourceLine>
+   <SourceLine>Error(-1)</SourceLine>
+   <SourceLine>Return</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Encrypt the body.</SourceLine>
+   <SourceLine>Dim encryptedBody As MemoryBlock = Encrypt(data)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Base encode the encrypted body.</SourceLine>
+   <SourceLine>Dim base64EncodedBody As MemoryBlock = EncodeBase64(encryptedBody)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// How long is the encoded body?</SourceLine>
+   <SourceLine>Dim bodyLength As UInt32 = base64EncodedBody.Size</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// First 9 bytes are:</SourceLine>
+   <SourceLine>// start token (1)</SourceLine>
+   <SourceLine>// message type (4)</SourceLine>
+   <SourceLine>// body length (4)</SourceLine>
+   <SourceLine>Dim packet As New MemoryBlock(9 + bodyLength)</SourceLine>
+   <SourceLine>packet.StringValue(0, 1) = kStartToken</SourceLine>
+   <SourceLine>packet.UInt32Value(1) = type</SourceLine>
+   <SourceLine>packet.UInt32Value(5) = bodyLength</SourceLine>
+   <SourceLine>packet.StringValue(9, bodyLength) = base64EncodedBody</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Send the packet.</SourceLine>
+   <SourceLine>Self.Write(packet)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>data As MemoryBlock, type As Integer</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>GenerateRSAKeys</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1828313087</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub GenerateRSAKeys()</SourceLine>
+   <SourceLine>If Not Crypto.RSAGenerateKeyPair(1024, mPrivateKey, mPublicKey) Then</SourceLine>
+   <SourceLine>// This shouldn't have happened...</SourceLine>
+   <SourceLine>Dim err As New RuntimeException</SourceLine>
+   <SourceLine>err.Message = "Unable to generate public and private keys"</SourceLine>
+   <SourceLine>Raise err</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>BeginHandshake</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>955869183</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub BeginHandshake()</SourceLine>
+   <SourceLine>// We have just connected to another SecureTCPSocket. Need to send the handshake packet </SourceLine>
+   <SourceLine>// containing our public key.</SourceLine>
+   <SourceLine>// Packet structure:</SourceLine>
+   <SourceLine>// {kHandshakeStart} {Public key length in bytes} {base64-encoded public key}</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim handshakeStartToken As String = "%"</SourceLine>
+   <SourceLine>Dim base64PublicKey As String = EncodeBase64(mPublicKey)</SourceLine>
+   <SourceLine>Dim keyLength As UInt32 = base64PublicKey.LenB</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim handshake As New MemoryBlock(1 + 4 + keyLength)</SourceLine>
+   <SourceLine>handshake.StringValue(0, 1) = handshakeStartToken</SourceLine>
+   <SourceLine>handshake.UInt32Value(1) = keyLength</SourceLine>
+   <SourceLine>handshake.StringValue(5, keyLength) = base64PublicKey</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Change the state to indicate that we're waiting for the server to reply with </SourceLine>
+   <SourceLine>// the encryption key.</SourceLine>
+   <SourceLine>mState = State.WaitingForServerKeyPacket</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Send the handshake packet.</SourceLine>
+   <SourceLine>Self.Write(handshake)</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HandleServerKeyPacket</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>234860543</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub HandleServerKeyPacket(data As MemoryBlock)</SourceLine>
+   <SourceLine>// `data` should contain a server key packet.</SourceLine>
+   <SourceLine>// This is essentially a packet containing the encryption key that w subsequently be used </SourceLine>
+   <SourceLine>// to encrypt and ecrypt all message send over this connection.</SourceLine>
+   <SourceLine>// The key itself should have been encrypted with this socket's public key.</SourceLine>
+   <SourceLine>// Should be in the format:</SourceLine>
+   <SourceLine>// {keyStartToken} {key length in bytes} {base64-encoded key}</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim startToken As String = "%"</SourceLine>
+   <SourceLine>Dim keyLength As UInt32</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Look for the start token.</SourceLine>
+   <SourceLine>If data.StringValue(0, 1) &lt;&gt; startToken Then</SourceLine>
+   <SourceLine>InvalidDataReceived</SourceLine>
+   <SourceLine>Return</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Get the key length.</SourceLine>
+   <SourceLine>If data.Size &lt; 5 Then</SourceLine>
+   <SourceLine>InvalidDataReceived</SourceLine>
+   <SourceLine>Return</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>keyLength = data.UInt32Value(1)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Get the encryption key (it will be base64 encoded).</SourceLine>
+   <SourceLine>If data.Size &lt;&gt; 5 + keyLength Then</SourceLine>
+   <SourceLine>InvalidDataReceived</SourceLine>
+   <SourceLine>Return</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Dim base64EncodedEncryptionKey As String = data.StringValue(5, keyLength)</SourceLine>
+   <SourceLine>Dim encryptedEncryptionKey As String = DecodeBase64(base64EncodedEncryptionKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Decrypt the encryption key with our private key.</SourceLine>
+   <SourceLine>mEncryptionKey = Crypto.RSADecrypt(encryptedEncryptionKey, mPrivateKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Change state to signal that we are ready to receive secure messages.</SourceLine>
+   <SourceLine>mState = State.ConnectedSecurely</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Fire our custom connected event.</SourceLine>
+   <SourceLine>Connected</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>data As MemoryBlock</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HandleSecurePacket</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1825613823</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub HandleSecurePacket(data As MemoryBlock)</SourceLine>
+   <SourceLine>// Parse the received data.</SourceLine>
+   <SourceLine>// Expected packet format:</SourceLine>
+   <SourceLine>// {start token} {message type} {body length} {base 64 encoded, encrypted body}</SourceLine>
+   <SourceLine>// Remember, more than one packet may be received at a time. Additionally, an incomplete </SourceLine>
+   <SourceLine>// packet may be received.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Add the newly received data to any data already in the buffer.</SourceLine>
+   <SourceLine>If mDataBuffer = Nil Then</SourceLine>
+   <SourceLine>mDataBuffer = data</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>mDataBuffer = mDataBuffer + data</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Do</SourceLine>
+   <SourceLine>Try</SourceLine>
+   <SourceLine>If Not HandleNewMessage Then Exit</SourceLine>
+   <SourceLine>Catch err As RuntimeException</SourceLine>
+   <SourceLine>InvalidDataReceived</SourceLine>
+   <SourceLine>End Try</SourceLine>
+   <SourceLine>Loop</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Fire the message received event for any messages received.</SourceLine>
+   <SourceLine>For i As Integer = 0 To mMessages.Ubound</SourceLine>
+   <SourceLine>MessageReceived(mMessages(i))</SourceLine>
+   <SourceLine>Next i</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Clear out the (now handled) messages.</SourceLine>
+   <SourceLine>Redim mMessages(-1)</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>data As MemoryBlock</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HandleHandshakePacket</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>798801919</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub HandleHandshakePacket(data As MemoryBlock)</SourceLine>
+   <SourceLine>// We are expecting a handshake packet from a client socket.</SourceLine>
+   <SourceLine>// Packet structure:</SourceLine>
+   <SourceLine>// {kHandshakeStart} {client public key length in bytes} {base64-encoded client public key}</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim handshakeStartToken As String = "%"</SourceLine>
+   <SourceLine>Dim keyLength As UInt32</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Look for the start token.</SourceLine>
+   <SourceLine>If data.StringValue(0, 1) &lt;&gt; handshakeStartToken Then</SourceLine>
+   <SourceLine>InvalidDataReceived</SourceLine>
+   <SourceLine>Return</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Get the key length.</SourceLine>
+   <SourceLine>If data.Size &lt; 5 Then</SourceLine>
+   <SourceLine>InvalidDataReceived</SourceLine>
+   <SourceLine>Return</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>keyLength = data.UInt32Value(1)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Get the client's public key (it will be base64 encoded).</SourceLine>
+   <SourceLine>If data.Size &lt;&gt; 5 + keyLength Then</SourceLine>
+   <SourceLine>InvalidDataReceived</SourceLine>
+   <SourceLine>Return</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Dim base64EncodedClientPublicKey As String = data.StringValue(5, keyLength)</SourceLine>
+   <SourceLine>mPublicKey = DecodeBase64(base64EncodedClientPublicKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Generate an encryption key for this connection.</SourceLine>
+   <SourceLine>GenerateEncryptionKey</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Send the encryption key, as a server key packet, to the client.</SourceLine>
+   <SourceLine>SendServerKeyPacket</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>data As MemoryBlock</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>GenerateEncryptionKey</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>253149183</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub GenerateEncryptionKey()</SourceLine>
+   <SourceLine>// Generate a random 128-bit encryption key to use for this connection.</SourceLine>
+   <SourceLine>mEncryptionKey = Crypto.GenerateRandomBytes(16)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>SendServerKeyPacket</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>426663935</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub SendServerKeyPacket()</SourceLine>
+   <SourceLine>// Send a packet to the client containing the encryption key that will be used for this connection.</SourceLine>
+   <SourceLine>// The packet should be in the format:</SourceLine>
+   <SourceLine>// {keyStartToken} {key length in bytes} {base64-encoded encryption key}</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim startToken As String = "%"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Use the client's public key to RSA protect the encryption key</SourceLine>
+   <SourceLine>Dim secret As String = Crypto.RSAEncrypt(mEncryptionKey, mPublicKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Base64 encode the RSA encrypted encryption key.</SourceLine>
+   <SourceLine>Dim base64Key As String = EncodeBase64(secret)</SourceLine>
+   <SourceLine>Dim keyLength As UInt32 = base64Key.LenB</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim packet As New MemoryBlock(1 + 4 + keyLength)</SourceLine>
+   <SourceLine>packet.StringValue(0, 1) = startToken</SourceLine>
+   <SourceLine>packet.UInt32Value(1) = keyLength</SourceLine>
+   <SourceLine>packet.StringValue(5, keyLength) = base64Key</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Send the packet.</SourceLine>
+   <SourceLine>Self.Write(packet)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Change the state to indicate that we've sent the encryption key so we can </SourceLine>
+   <SourceLine>// now communicate securely.</SourceLine>
+   <SourceLine>mState = State.ConnectedSecurely</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Fire our custom connected event.</SourceLine>
+   <SourceLine>Connected</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Reset</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1999976447</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Reset()</SourceLine>
+   <SourceLine>mState = If(mIsServer, State.WaitingForHandshakePacket, State.WaitingToConnect)</SourceLine>
+   <SourceLine>mPrivateKey = ""</SourceLine>
+   <SourceLine>mPublicKey = ""</SourceLine>
+   <SourceLine>mDataBuffer = New MemoryBlock(0)</SourceLine>
+   <SourceLine>Redim mMessages(-1)</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>HandleNewMessage</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1037766655</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function HandleNewMessage() As Boolean</SourceLine>
+   <SourceLine>// Called when we have new data and are expecting the start of a new message.</SourceLine>
+   <SourceLine>// Returns True if a complete message is successfully parsed.</SourceLine>
+   <SourceLine>// Message packet format:</SourceLine>
+   <SourceLine>// {start token} {message type} {body length} {base 64 encoded, encrypted body}</SourceLine>
+   <SourceLine>// May raise a NetKitError.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Is there any data to parse?</SourceLine>
+   <SourceLine>If mDataBuffer = Nil Or mDataBuffer.Size = 0 Then Return False</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Check for the start token.</SourceLine>
+   <SourceLine>If mDataBuffer.StringValue(0, 1) &lt;&gt; kStartToken Then</SourceLine>
+   <SourceLine>Dim err As New RuntimeException</SourceLine>
+   <SourceLine>err.Message = "Expected a message start token"</SourceLine>
+   <SourceLine>Raise err</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Get the message type.</SourceLine>
+   <SourceLine>Dim type As Integer</SourceLine>
+   <SourceLine>If mDataBuffer.Size &lt; 5 Then</SourceLine>
+   <SourceLine>// Insufficient data to complete this message.</SourceLine>
+   <SourceLine>Return False</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>type = mDataBuffer.UInt32Value(1)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Get the length of the body.</SourceLine>
+   <SourceLine>Dim bodyLength As Integer</SourceLine>
+   <SourceLine>If mDataBuffer.Size &lt; 9 Then</SourceLine>
+   <SourceLine>// Insufficient data to complete this message.</SourceLine>
+   <SourceLine>Return False</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>bodyLength = mDataBuffer.UInt32Value(5)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Get the body.</SourceLine>
+   <SourceLine>Dim base64EncodedBody As String</SourceLine>
+   <SourceLine>If bodyLength + 9 &gt; mDataBuffer.Size Then</SourceLine>
+   <SourceLine>// Insufficient data to complete this message.</SourceLine>
+   <SourceLine>Return False</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>base64EncodedBody = mDataBuffer.StringValue(9, bodyLength)</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Decode and decrypt the body.</SourceLine>
+   <SourceLine>Dim decodedBody As String = DecodeBase64(base64EncodedBody)</SourceLine>
+   <SourceLine>Dim decryptedBody As String = Decrypt(decodedBody)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Construct a simple message.</SourceLine>
+   <SourceLine>mMessages.Append(New SecureTCPMessage(decryptedBody, type))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Remove this message from the data buffer.</SourceLine>
+   <SourceLine>mDataBuffer = mDataBuffer.RightB(mDataBuffer.Size - (9 + bodyLength))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Tell the calling function that a complete message was successfully parsed.</SourceLine>
+   <SourceLine>Return True</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Boolean</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Encrypt</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1293291519</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Encrypt(data As MemoryBlock) As MemoryBlock</SourceLine>
+   <SourceLine>// Encrypts the passed data using the Blowfish CBC algorithm.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Need a temporary store for current state.</SourceLine>
+   <SourceLine>Dim m As MemoryBlock</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim bf As New BlowfishMBS</SourceLine>
+   <SourceLine>bf.SetKey(mEncryptionKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Add chr(0) padding.</SourceLine>
+   <SourceLine>While lenb(data) Mod 8 &lt;&gt; 0</SourceLine>
+   <SourceLine>data = data + chrb(0)</SourceLine>
+   <SourceLine>Wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return bf.EncryptCBC(data, m)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>data As MemoryBlock</ItemParams>
+  <ItemResult>MemoryBlock</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Decrypt</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1344065535</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Decrypt(data As MemoryBlock) As MemoryBlock</SourceLine>
+   <SourceLine>Dim m As MemoryBlock = Nil</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim bf As New BlowfishMBS</SourceLine>
+   <SourceLine>bf.SetKey(mEncryptionKey)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim decoded As String = bf.DecryptCBC(data, m)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Remove chr(0) padding.</SourceLine>
+   <SourceLine>While LenB(decoded) &gt; 0 And AscB(RightB(decoded, 1)) = 0</SourceLine>
+   <SourceLine>decoded = LeftB(decoded, LenB(decoded) - 1)</SourceLine>
+   <SourceLine>Wend</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return decoded</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>data As MemoryBlock</ItemParams>
+  <ItemResult>MemoryBlock</ItemResult>
+ </Method>
+ <Hook>
+  <ItemName>Connected</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>Disconnected</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>Error</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams>code As Integer</ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>InvalidDataReceived</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>MessageReceived</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>0</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams>message As SecureTCPMessage</ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>MessageSent</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams>toIP As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Property>
+  <ItemName>ID</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>838348799</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>ID As Integer = -1</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>ID As Integer = -1</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mState</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>501948415</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mState As SecureTCPSocket.State</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mState As SecureTCPSocket.State</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mPublicKey</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1512931327</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPublicKey As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPublicKey As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mPrivateKey</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1179856895</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPrivateKey As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPrivateKey As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mEncryptionKey</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>101718015</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mEncryptionKey As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mEncryptionKey As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mIsServer</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1158938623</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mIsServer As Boolean = False</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mIsServer As Boolean = False</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mDataBuffer</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1662984191</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDataBuffer As MemoryBlock</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDataBuffer As MemoryBlock</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mMessages()</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1422225407</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mMessages() As SecureTCPMessage</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mMessages() As SecureTCPMessage</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>String</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>Integer</ItemType>
+   <EditorType>Integer</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>String</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Address</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Port</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>ID</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>-1</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>mState</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>SecureTCPSocket.State</ItemType>
+   <EditorType>Enum</EditorType>
+   <Enumeration>
+    <ItemDef>0 - WaitingForServerKeyPacket</ItemDef>
+    <ItemDef>1 - ConnectedSecurely</ItemDef>
+    <ItemDef>2 - WaitingToConnect</ItemDef>
+    <ItemDef>3 - WaitingForHandshakePacket</ItemDef>
+   </Enumeration>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>kHandshakeStart</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1450323967</PartID>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemType>2</ItemType>
+  <ItemDef>&amp;h25</ItemDef>
+  <ItemFlags>1</ItemFlags>
+ </Constant>
+ <Constant>
+  <ItemName>kStartToken</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>2120671231</PartID>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemType>0</ItemType>
+  <ItemDef>*</ItemDef>
+  <ItemFlags>1</ItemFlags>
+ </Constant>
+ <Enumeration>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>State</ItemName>
+  <ItemFlags>0</ItemFlags>
+  <ItemType>Integer</ItemType>
+  <ItemName>State</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1490509823</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>WaitingForServerKeyPacket</SourceLine>
+   <SourceLine>ConnectedSecurely</SourceLine>
+   <SourceLine>WaitingToConnect</SourceLine>
+   <SourceLine>WaitingForHandshakePacket</SourceLine>
+  </ItemSource>
+ </Enumeration>
+</block>
+</RBProject>
