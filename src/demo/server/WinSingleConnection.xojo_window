@@ -267,6 +267,7 @@ Begin Window WinSingleConnection
    End
    Begin SecureTCPSocket MySocket
       Address         =   ""
+      Enabled         =   True
       ID              =   -1
       Index           =   -2147483648
       LockedInPosition=   False
@@ -630,9 +631,10 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub MessageReceived(data As MemoryBlock, type As Integer)
+		  #Pragma Unused type
+		  
 		  Output("Message received")
 		  Output("================")
-		  
 		  Output(DefineEncoding(data, Encodings.UTF8))
 		  
 		  
